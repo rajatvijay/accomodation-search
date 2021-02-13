@@ -26,6 +26,25 @@ export const App = () => {
       lng: place.longitude,
     });
   };
+  const handleMarkerClick = (place: Place) => {
+    setMapCenter({
+      lat: place.latitude,
+      lng: place.longitude,
+    });
+
+    // Scroll place into view from left panel
+    const element = document.getElementById(place.id);
+    if (element) {
+      element.scrollIntoView({
+        behavior: "smooth",
+      });
+      element.style.border = "2px solid red";
+      element.style.borderRadius = "4px";
+      setTimeout(() => {
+        element.style.border = "none";
+      }, 2000);
+    }
+  };
   return (
     <ChakraProvider theme={theme}>
       <SearchAccommodation
@@ -39,7 +58,11 @@ export const App = () => {
         getNext={getNext}
         getPrevious={getPrevious}
       />
-      <Map center={mapCenter} places={places} />
+      <Map
+        onMarkerClick={handleMarkerClick}
+        center={mapCenter}
+        places={places}
+      />
     </ChakraProvider>
   );
 };

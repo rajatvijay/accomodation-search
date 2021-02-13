@@ -11,3 +11,8 @@ export type Place = {
   image: string;
   id: string;
 };
+
+export type Center = {
+  lat: number;
+  lng: number;
+};
