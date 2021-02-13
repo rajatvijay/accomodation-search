@@ -5,8 +5,9 @@ import {
   Marker,
   InfoWindow,
 } from "@react-google-maps/api";
-import { Center, Place } from "../common/types";
+import { Place } from "../common/types";
 import { Box, Text } from "@chakra-ui/react";
+import { AreaSelector } from "./AreaSelector";
 
 const containerStyle = {
   width: "100vw",
@@ -15,16 +16,27 @@ const containerStyle = {
 
 type MapProps = {
   places: Place[];
-  center: Center;
+  center: {
+    lat: number;
+    lng: number;
+  };
   onMarkerClick: (place: Place) => void;
+  setFocusBounds: (bounds: google.maps.LatLngBounds | null) => void;
 };
 const Map: FC<MapProps> = (props) => {
-  const { places, center, onMarkerClick } = props;
+  const { places, center, onMarkerClick, setFocusBounds } = props;
   const isSelectedPlace = (place: Place) =>
     place.latitude === center.lat && place.longitude === center.lng;
+  const onRectangleComplete = (rectangle: google.maps.Rectangle | null) => {
+    setFocusBounds(rectangle?.getBounds() || null);
+  };
   return (
-    <LoadScript googleMapsApiKey={process.env.REACT_APP_GOOGLE_MAPS_API_KEY!}>
+    <LoadScript
+      libraries={["drawing"]}
+      googleMapsApiKey={process.env.REACT_APP_GOOGLE_MAPS_API_KEY!}
+    >
       <GoogleMap mapContainerStyle={containerStyle} center={center} zoom={15}>
+        <AreaSelector onRectangleComplete={onRectangleComplete} />
         {places.map((place) => (
           <>
             <Marker

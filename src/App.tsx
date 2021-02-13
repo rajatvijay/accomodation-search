@@ -20,6 +20,10 @@ export const App = () => {
     lat: -3.745,
     lng: -38.523,
   });
+  const [
+    focusBounds,
+    setFocusBounds,
+  ] = useState<google.maps.LatLngBounds | null>(null);
   const handlePlaceClick = (place: Place) => {
     setMapCenter({
       lat: place.latitude,
@@ -45,13 +49,18 @@ export const App = () => {
       }, 2000);
     }
   };
+  const filteredPlaces = focusBounds
+    ? places.filter((place) =>
+        focusBounds.contains({ lat: place.latitude, lng: place.longitude })
+      )
+    : places;
   return (
     <ChakraProvider theme={theme}>
       <SearchAccommodation
         onPlaceClick={handlePlaceClick}
         status={status}
         onSearch={search}
-        places={places}
+        places={filteredPlaces}
         error={error}
         totalPages={totalPage}
         currentPage={page}
@@ -62,6 +71,7 @@ export const App = () => {
         onMarkerClick={handleMarkerClick}
         center={mapCenter}
         places={places}
+        setFocusBounds={setFocusBounds}
       />
     </ChakraProvider>
   );

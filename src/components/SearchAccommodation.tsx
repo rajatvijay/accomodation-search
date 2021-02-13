@@ -59,7 +59,6 @@ export const SearchAccommodation: FC<SearchAccommodationProps> = (props) => {
       paddingX="2"
       paddingY="5"
       spacing="6"
-      id=""
     >
       <Stack spacing="0">
         <InputGroup>
